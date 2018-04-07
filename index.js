@@ -8,13 +8,10 @@ function intToHex(number) {
 
 async function runRPCCall(method, params) {
   const res = await fetch('http://localhost:8545/', {
-    // Metoda POST
     method: 'post',
-    // 3/ Ustawiamy content-type
     headers: {
       'Content-Type': 'application/json'
     },
-    // 6/ I wysyłamy zserializowany request o najnowszy blok
     body: JSON.stringify({
       jsonrpc: '2.0',
       id: 1,
