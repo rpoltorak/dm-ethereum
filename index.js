@@ -50,10 +50,23 @@ async function getLatestBlockNumber() {
   return runRPCCall('eth_blockNumber', []);
 }
 
+async function getTransactionByHash(hash) {
+  return runRPCCall('eth_getTransactionByHash', [hash]);
+}
+
+async function getTransactions(transactions) {
+  return Promise.all(transactions.map(async hash => await getTransactionByHash(hash)));
+}
+
 async function run() {
   const latestBlocks = await getLatestBlocks(3);
-  const results = latestBlocks.reverse().map(({ hash, number, parentHash }) => ({ hash, number, parentHash }));
+  const mappedBlocks = latestBlocks.reverse().map(({ hash, number, parentHash }) => ({ hash, number, parentHash }));
 
-  console.log(results);
+  const latestBlock = latestBlocks[0];
+  const latestTransactions = await getTransactions(latestBlock.transactions);
+
+  const mappedTransactions = latestTransactions.map(({ gas, gasPrice }) => ({ gas, gasPrice }))
+
+  console.log(mappedTransactions);
 }
 
